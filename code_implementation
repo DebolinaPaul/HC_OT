@@ -1,0 +1,8 @@
+# read the data as X in a data.matrix form
+#nc= number of clusters
+h1=hc(dist(X),1000,method="complete")
+plot(h1)
+clusterCut <- cutree(h1, nc)
+pdf("d3_htot.pdf",height,width)
+plot(X,col=clusterCut,pch=clusterCut+14,xlab = "Feature 1", ylab = "Feature 2")
+dev.off()
