@@ -46,7 +46,6 @@ clus_dist=function(C,l,k){
   n=dim(C)[1]
   m=dim(C)[2]
   if((m>k)&&(n>k)){
-    #   cat('alu')
     x=rep(1/n,n)
     y=rep(1/m,m)
     x=as.matrix(x)
@@ -56,7 +55,6 @@ clus_dist=function(C,l,k){
     a=a$Distance
   }else{
     a=min(C)
-    #    cat('begun')
   }
   return(a)
 }
