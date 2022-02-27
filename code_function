@@ -1,5 +1,67 @@
 # A really simple pure-R hierarchical clustering implementation. Can
 # be used like hclust(d, method).
+
+dis = function(x)
+{
+  x = as.matrix(x)
+  u = apply(x*x,1,sum) %*% matrix(1.0,1,nrow(x))
+  sqrt(abs(u + t(u) - 2 * x %*% t(x)))
+}
+
+iorder = function(m)
+{
+  N = nrow(m) + 1
+  iorder = rep(0,N)
+  iorder[1] = m[N-1,1]
+  iorder[2] = m[N-1,2]
+  loc = 2
+  for(i in seq(N-2,1))
+  {
+    for(j in seq(1,loc))
+    {
+      if(iorder[j] == i)
+      {
+        iorder[j] = m[i,1]
+        if(j==loc)
+        {
+          loc = loc + 1
+          iorder[loc] = m[i,2]
+        } else
+        {
+          loc = loc + 1
+          for(k in seq(loc, j+2)) iorder[k] = iorder[k-1]
+          iorder[j+1] = m[i,2]
+        }
+      }
+    }
+  }
+  -iorder
+}
+
+clus_dist=function(C,l,k){
+  if(is.vector(C)==1){
+    C=matrix(C)
+    C=t(C)
+  }
+  n=dim(C)[1]
+  m=dim(C)[2]
+  if((m>k)&&(n>k)){
+    #   cat('alu')
+    x=rep(1/n,n)
+    y=rep(1/m,m)
+    x=as.matrix(x)
+    y=as.matrix(y)
+    #   l=60/median(C)
+    a=Sinkhorn(x,y,C,l)
+    a=a$Distance
+  }else{
+    a=min(C)
+    #    cat('begun')
+  }
+  return(a)
+}
+
+
 hc = function(d,l, method=c("single","complete","average","median"))
 {
   if(!is.matrix(d)) d = as.matrix(d)
